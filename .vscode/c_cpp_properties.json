@@ -3,7 +3,7 @@
         {
   "name": "MinGW64",
   "intelliSenseMode": "gcc-x64",
-  "compilerPath": "D:\\app\\vscode\\sdk\\bin\\g++.exe",
+  "compilerPath": "E:\\application\\mingw\\mingw64\\bin\\g++.exe",
   "includePath": [
   "${workspaceFolder}"
             ],

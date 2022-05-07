@@ -40,6 +40,57 @@ void treeInsert(TreeNode* cur,int val,bool left){
 }
 class Solution {
 public:
+    int maxDepth(Node* root) {
+      //以下是递归法
+      // if(root==nullptr) return 0;
+      // int depth=0;
+      // for(int i=0;i<root->children.size();i++){
+      //   depth=max(depth,maxDepth(root->children[i]));
+      // }
+      // return depth+1;
+      
+      //以下是迭代
+      queue<Node*> que;
+      if(root!=nullptr) que.push(root);
+      int depth=0;
+      while(!que.empty()){
+        int size=que.size();
+        depth++;
+        for(int i=0;i<size;i++){
+          Node *node=que.front();
+          que.pop();
+          for(int j=0;j<node->children.size();j++){
+            if(node->children[j]!=nullptr) que.push(node->children[j]);
+          }
+        }
+      }
+      return depth;
+    }
+    int countNodes(TreeNode* root) {
+      if(root==nullptr) return 0;
+      TreeNode *left=root->left;
+      TreeNode *right=root->right;
+      int leftHight=0,rightHight=0;
+      while(left!=nullptr){
+        left=left->left;
+        leftHight++;
+      }
+      while(right){
+        right=right->right;
+        rightHight++;
+      }
+      if(leftHight==rightHight){
+        return (2<<leftHight)-1;
+      }
+      return countNodes(root->left)+countNodes(root->right)+1;
+    }
+    int getNodeNum(TreeNode* root){
+      if(root==nullptr) return 0;
+      int leftTreeNum=getNodeNum(root->left);
+      int rightTreeNum=getNodeNum(root->right);
+      int sum= leftTreeNum+rightTreeNum+1;
+      return sum;
+    }
     bool compare(TreeNode* left,TreeNode* right){
       if(left==nullptr&&right!=nullptr)return false;
       else if(left!=nullptr&&right==nullptr)return false;
@@ -369,7 +420,13 @@ int main(){
   treeInsert(root->left->left,12,true);
   treeInsert(root->left->left,8,false);
   treeInsert(root->right->left,6,true);
-  treeInsert(root->right->right,2,false);
+  // treeInsert(root->right->right,2,false);
+  //以下语句可以将这棵树补成完全二叉树
+  treeInsert(root->left,15,false);
+  treeInsert(root->left->right,14,true);
+  treeInsert(root->left->right,16,false);
+  treeInsert(root->right->right,18,true);
+  // treeInsert(root->right->left,19,false);
   Solution A;
   // res=A.minDepth(root);
   // for(auto v:ans){
@@ -377,6 +434,6 @@ int main(){
   // }
   // cout<<res;
   // 
-  cout<<A.isEvenOddTree(root);
+  cout<<A.countNodes(root);
   getchar();
 }
