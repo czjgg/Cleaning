@@ -1,14 +1,14 @@
 {
-  "configurations": [
+    "configurations": [
         {
-  "name": "MinGW64",
-  "intelliSenseMode": "gcc-x64",
-  "compilerPath": "D:\\app\\vscode\\sdk\\bin\\g++.exe",
-  "includePath": [
-  "${workspaceFolder}"
+            "name": "MinGW64",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "E:\\application\\mingw\\mingw64\\bin\\g++.exe",
+            "includePath": [
+                "${workspaceFolder}"
             ],
-  "cppStandard": "c++17"
+            "cppStandard": "c++17"
         }
     ],
-  "version": 4
- }
+    "version": 4
+}
