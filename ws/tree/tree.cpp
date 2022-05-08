@@ -40,7 +40,32 @@ void treeInsert(TreeNode* cur,int val,bool left){
 }
 class Solution {
 public:
-    int maxDepth(Node* root) {
+    int result;
+
+    int getHeight(TreeNode* node) {
+      if(node ==nullptr){
+        return 0;
+      }
+      int leftHeight = getHeight(node->left);
+      if(leftHeight == -1) return -1;
+      int rightHeight = getHeight(node->right);
+      if(rightHeight == -1) return -1;
+      return abs(leftHeight-rightHeight) > 1? -1: max(leftHeight,rightHeight) + 1;
+    }
+    bool isBalanced(TreeNode* root) {
+      return getHeight(root) == -1 ? false:true;
+    }
+    void getDepth(TreeNode* node, int depth) {//前序遍历求节点深度逻辑
+        result=depth>result?depth:result;
+        if(node->left!=nullptr){
+          getDepth(node->left,depth+1);
+        }
+        if(node->right!=nullptr){
+          getDepth(node->right,depth+1);
+        }
+        return ;
+    }
+    int maxDepth(TreeNode* root) {
       //以下是递归法
       // if(root==nullptr) return 0;
       // int depth=0;
@@ -50,21 +75,26 @@ public:
       // return depth+1;
       
       //以下是迭代
-      queue<Node*> que;
-      if(root!=nullptr) que.push(root);
-      int depth=0;
-      while(!que.empty()){
-        int size=que.size();
-        depth++;
-        for(int i=0;i<size;i++){
-          Node *node=que.front();
-          que.pop();
-          for(int j=0;j<node->children.size();j++){
-            if(node->children[j]!=nullptr) que.push(node->children[j]);
-          }
-        }
-      }
-      return depth;
+      // queue<Node*> que;
+      // if(root!=nullptr) que.push(root);
+      // int depth=0;
+      // while(!que.empty()){
+      //   int size=que.size();
+      //   depth++;
+      //   for(int i=0;i<size;i++){
+      //     Node *node=que.front();
+      //     que.pop();
+      //     for(int j=0;j<node->children.size();j++){
+      //       if(node->children[j]!=nullptr) que.push(node->children[j]);
+      //     }
+      //   }
+      // }
+      // return depth;
+
+      result=0;    //前序遍历求节点深度逻辑
+      if(root==nullptr) return result;
+      getDepth(root,1);
+      return result;
     }
     int countNodes(TreeNode* root) {
       if(root==nullptr) return 0;
@@ -188,23 +218,23 @@ public:
       }  
       return ans; 
     }
-    int maxDepth(TreeNode* root) {
-      queue<TreeNode*> que;
-      if(root!=nullptr) que.push(root);
-      int ans=0;
-      TreeNode* temp;
-      while(!que.empty()){
-        int size= que.size();
-        for(int i=0;i<size;i++){
-          temp= que.front();
-          que.pop();
-          if(temp->left!=nullptr) que.push(temp->left);
-          if(temp->right!=nullptr) que.push(temp->right);
-        }
-        ans++;
-      }  
-      return ans;         
-    }
+    // int maxDepth(TreeNode* root) {
+    //   queue<TreeNode*> que;
+    //   if(root!=nullptr) que.push(root);
+    //   int ans=0;
+    //   TreeNode* temp;
+    //   while(!que.empty()){
+    //     int size= que.size();
+    //     for(int i=0;i<size;i++){
+    //       temp= que.front();
+    //       que.pop();
+    //       if(temp->left!=nullptr) que.push(temp->left);
+    //       if(temp->right!=nullptr) que.push(temp->right);
+    //     }
+    //     ans++;
+    //   }  
+    //   return ans;         
+    // }
     vector<int> largestValues(TreeNode* root) {
        vector<int> ans;
        queue<TreeNode*> que;
@@ -422,10 +452,10 @@ int main(){
   treeInsert(root->right->left,6,true);
   // treeInsert(root->right->right,2,false);
   //以下语句可以将这棵树补成完全二叉树
-  treeInsert(root->left,15,false);
-  treeInsert(root->left->right,14,true);
-  treeInsert(root->left->right,16,false);
-  treeInsert(root->right->right,18,true);
+  // treeInsert(root->left,15,false);
+  // treeInsert(root->left->right,14,true);
+  // treeInsert(root->left->right,16,false);
+  // treeInsert(root->right->right,18,true);
   // treeInsert(root->right->left,19,false);
   Solution A;
   // res=A.minDepth(root);
@@ -434,6 +464,6 @@ int main(){
   // }
   // cout<<res;
   // 
-  cout<<A.countNodes(root);
+  cout<<A.isBalanced(root);
   getchar();
 }
