@@ -41,33 +41,135 @@ void treeInsert(TreeNode* cur,int val,bool left){
 class Solution {
 private:
 
-    void traversal(TreeNode* cur, vector<int>& path, vector<string>& result) {
-      path.push_back(cur->val);
-      if(cur->left==nullptr&&cur->right==nullptr){
-        string sPath;
-        for(int i=0;i<path.size()-1;i++){
-          sPath += to_string(path[i]);
-          sPath += "->";
-        }
-        sPath += to_string(path[path.size()-1]);
-        result.push_back(sPath);
-        return ;
+    // void traversal(TreeNode* cur, vector<int>& path, vector<string>& result) {
+    //   path.push_back(cur->val);
+    //   if(cur->left==nullptr&&cur->right==nullptr){
+    //     string sPath;
+    //     for(int i=0;i<path.size()-1;i++){
+    //       sPath += to_string(path[i]);
+    //       sPath += "->";
+    //     }
+    //     sPath += to_string(path[path.size()-1]);
+    //     result.push_back(sPath);
+    //     return ;
+    //   }
+    //   if(cur->left){
+    //     traversal(cur->left,path,result);
+    //     path.pop_back();
+    //   }
+    //   if(cur->right){
+    //     traversal(cur->right,path,result);
+    //     path.pop_back();
+    //   }
+    // }
+    void traversal(TreeNode* cur, string path, vector<string>& result) {//精简版
+      path += to_string(cur->val);
+      if(cur->left!=nullptr&&cur->right!=nullptr){
+        result.push_back(path);
+        return;
       }
-      if(cur->left){
-        traversal(cur->left,path,result);
-        path.pop_back();
-      }
-      if(cur->right){
-        traversal(cur->right,path,result);
-        path.pop_back();
-      }
+      if(cur->left) traversal(cur->left,path + "->",result);
+      if(cur->right) traversal(cur->right,path + "->",result);
     }
 public:
     int result;
+    bool tag=false;
 
+    void getDfsOrder(TreeNode* cur, string result){
+
+    }
+    void getnext(int* next,const string& s){
+      int j=0;
+      next[0]=0;
+      for(int i=1;i<s.size();i++){
+      while(j>0&&s[j]!=s[i]){
+        j=next[j-1];
+      }
+      if(s[i]==s[j]){
+        j++;
+      }
+      next[i]=j;
+    }
+  }
+    int strStr(string haystack, string needle) {
+      if(needle.size()==0){
+        return 0;
+      }      
+      int next[needle.size()];
+      getnext(next,needle);
+      int j=0;
+      for(int i=0;i<haystack.size();i++){
+        while(j>0&&haystack[i]!=needle[j]){
+          j=next[j-1];
+      }
+      if(haystack[i]==needle[j]){
+        j++;
+      }
+      if(j==needle.size()){
+        return (i-needle.size()+1);
+      }
+    }
+    return -1;
+  }
+    bool isSubtree(TreeNode* root, TreeNode* subRoot) {
+      // if(!root&&!subRoot){
+      //   return true;
+      // }
+      // if((!root&&subRoot) || (root&&!subRoot)){
+      //     return false;
+      // }
+      // return DFS(root,subRoot);
+      getDfsOrder(root,leftString);
+    }
+    bool DFS(TreeNode* root,TreeNode* subRoot){
+      if(tag) return true;
+      if(compare2(root,subRoot)) {
+        tag=true;
+        return true;
+      }
+      if (root->left) DFS(root->left,subRoot);
+      if (root->right) DFS(root->right,subRoot);
+      if(tag) return true;
+      return false;
+    }
+    bool compare2(TreeNode* left,TreeNode* right){
+      if(left==nullptr&&right!=nullptr)return false;
+      else if(left!=nullptr&&right==nullptr)return false;
+      else if(left==nullptr&&right==nullptr)return true;
+      else if(left->val!=right->val)return false;
+      bool outside=compare2(left->left,right->left);
+      bool inside=compare2(left->right,right->right);
+      bool isSame=outside && inside;
+      return isSame;
+    }
+    vector<string> binaryTreePaths2(TreeNode* root) {
+      stack<TreeNode*> treeST;
+      stack<string> pathST;
+      vector<string> result;
+      if(root==nullptr) return result;
+      treeST.push(root);
+      pathST.push(to_string(root->val));
+      while(!treeST.empty()){
+        TreeNode* node=treeST.top();treeST.pop();
+        string path=pathST.top();pathST.pop();
+        if(node->left==nullptr&&node->right==nullptr){
+          result.push_back(path);
+        }
+        if(node->right){
+          treeST.push(node->right);
+          pathST.push(path + "->"+ to_string(node->right->val));
+        }
+        if(node->left){
+          treeST.push(node->left);
+          pathST.push(path + "->"+ to_string(node->left->val));
+        }
+      }
+      return result;
+    }
     vector<string> binaryTreePaths(TreeNode* root) {
       vector<string> result;
-      vector<int> path;
+      // vector<int> path;
+      string path;
       if(root==nullptr) return result;
       traversal(root,path,result);
       return result;
@@ -471,15 +573,19 @@ public:
 int main(){
   vector<int> ans;
   int res;
-  TreeNode* root=new TreeNode(1);
-  treeInsert(root,10,true);
-  treeInsert(root,4,false);
-  treeInsert(root->left,3,true);
-  treeInsert(root->right,7,true);
-  treeInsert(root->right,9,false);
-  treeInsert(root->left->left,12,true);
-  treeInsert(root->left->left,8,false);
-  treeInsert(root->right->left,6,true);
+  TreeNode* root=new TreeNode(3);
+  treeInsert(root,4,true);
+  treeInsert(root,5,false);
+  treeInsert(root->left,1,true);
+  treeInsert(root->left,2,false);
+  TreeNode* subRoot=new TreeNode(4);
+  treeInsert(subRoot,1,true);
+  treeInsert(subRoot,2,false);
+  // treeInsert(root->right,7,true);
+  // treeInsert(root->right,9,false);
+  // treeInsert(root->left->left,12,true);
+  // treeInsert(root->left->left,8,false);
+  // treeInsert(root->right->left,6,true);
   // treeInsert(root->right->right,2,false);
   //以下语句可以将这棵树补成完全二叉树
   // treeInsert(root->left,15,false);
@@ -494,6 +600,6 @@ int main(){
   // }
   // cout<<res;
   // 
-  cout<<A.isBalanced(root);
+  cout<<A.isSubtree(root, subRoot);
   getchar();
 }

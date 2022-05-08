@@ -5,7 +5,6 @@
 using namespace std;
 class Solution {
 public:
-  
   void getnext(int* next,const string& s){
     int j=0;
     next[0]=0;
