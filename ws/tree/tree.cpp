@@ -36,7 +36,7 @@ void treeInsert(TreeNode* cur,int val,bool left){
   }else{
     cur->right=temp;
   }
-  return;
+  return ; 
 }
 class Solution {
 private:
