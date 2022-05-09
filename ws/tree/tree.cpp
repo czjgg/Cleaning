@@ -62,21 +62,74 @@ private:
     //     path.pop_back();
     //   }
     // }
-    void traversal(TreeNode* cur, string path, vector<string>& result) {//精简版
-      path += to_string(cur->val);
-      if(cur->left!=nullptr&&cur->right!=nullptr){
-        result.push_back(path);
-        return;
-      }
-      if(cur->left) traversal(cur->left,path + "->",result);
-      if(cur->right) traversal(cur->right,path + "->",result);
-    }
+    // void traversal(TreeNode* cur, string path, vector<string>& result) {//精简版
+    //   path += to_string(cur->val);
+    //   if(cur->left!=nullptr&&cur->right!=nullptr){
+    //     result.push_back(path);
+    //     return;
+    //   }
+    //   if(cur->left) traversal(cur->left,path + "->",result);
+    //   if(cur->right) traversal(cur->right,path + "->",result);
+    // }
 public:
     int result;
     bool tag=false;
+    int maxLen = INT_MIN;
+    int maxleftValue;
 
-    void getDfsOrder(TreeNode* cur, string result){
+    // void traversal(TreeNode* root, int leftLen) {
+    //   if(!root->left&&!root->right){
+    //     if(leftLen>maxLen){
+    //       maxLen=leftLen;
+    //       maxleftValue=root->val;
+    //     }
+    //     return;
+    //   }
+    //   if(root->left) traversal(root->left,leftLen+1);
+    //   if(root->right) traversal(root->right,leftLen+1);
+    //   return;
+    // }
+    int findBottomLeftValue(TreeNode* root) {
+      // 递归法
+      // traversal(root, 0);
+      // return maxleftValue;
+      
+      //迭代法
+      queue<TreeNode*> queT;
+      int res=INT_MIN;
+      if(root !=nullptr) queT.push(root);
+      while(!queT.empty()){
+        int size=queT.size();
+        for(int i=0; i<size;i++){
+          TreeNode* node = queT.front();
+          queT.pop();
+          if(i==0) res = node->val;
+          if(node->left) queT.push(node->left);
+          if(node->right) queT.push(node->right);
+        }
+      } 
+      return res;
+    }
+    int sumOfLeftLeaves(TreeNode* root) {
+      if(root==nullptr) return 0;
+      int leftValue=sumOfLeftLeaves(root->left);
+      int rightValue=sumOfLeftLeaves(root->right);
 
+      int midValue=0;
+      if(root->left&&!root->left->left&&!root->left->right){
+        midValue=root->left->val;
+      }
+      int sum=leftValue+rightValue+midValue;
+      return sum;
+    }
+    void getDfsOrder(TreeNode* cur,vector<char> &res){
+      if(cur==nullptr) return ;
+      res.push_back(cur->val);
+      if(cur->left) getDfsOrder(cur->left,res);
+      else res.push_back('l'-48);
+      if(cur->right) getDfsOrder(cur->right,res);
+      else res.push_back('r'-48);
+      return ;
     }
     void getnext(int* next,const string& s){
       int j=0;
@@ -119,7 +172,23 @@ public:
       //     return false;
       // }
       // return DFS(root,subRoot);
-      getDfsOrder(root,leftString);
+      vector<char> leftStr;
+      getDfsOrder(root,leftStr);
+      vector<char> rightStr;
+      getDfsOrder(subRoot,rightStr);
+		  string lst,rst;
+		  for(int i=0;i<leftStr.size();i++)
+      {
+        lst += leftStr[i]+48;
+      }
+      for(int i=0;i<rightStr.size();i++)
+      {
+        rst += rightStr[i]+48;
+      }
+
+      cout<<lst<<endl;
+      cout<<rst<<endl;
+      return strStr(lst,rst)!=-1;
     }
     bool DFS(TreeNode* root,TreeNode* subRoot){
       if(tag) return true;
