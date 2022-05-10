@@ -41,6 +41,65 @@ void treeInsert(TreeNode* cur,int val,bool left){
 class Solution {
 private:
 
+    vector<vector<int>> results;
+    vector<int> path;
+
+    TreeNode* traversalPreStruct (vector<int>& inorder, int inorderBegin, int inorderEnd, vector<int>& preorder, int preorderBegin, int preorderEnd) {
+      if(inorderBegin==inorderEnd) return NULL;
+
+      int rootValue=preorder[preorderBegin];
+      TreeNode* root=new TreeNode(rootValue);
+
+      if(preorderEnd-preorderBegin==1) return root;
+
+      int delimiterIndex;
+      for (delimiterIndex = inorderBegin; delimiterIndex < inorderEnd; delimiterIndex++) {
+        if (inorder[delimiterIndex] == rootValue) break;
+      }
+
+      int leftInorderBegin = inorderBegin;
+      int leftInorderEnd = delimiterIndex;
+      int rightInorderBegin = delimiterIndex + 1;
+      int rightInorderEnd = inorderEnd;
+      
+      int leftPreorderBegin =  preorderBegin + 1;
+      int leftPreorderEnd = preorderBegin + 1 + delimiterIndex - inorderBegin; // 终止位置是起始位置加上中序左区间的大小size
+      
+      int rightPreorderBegin = preorderBegin + 1 + (delimiterIndex - inorderBegin);
+      int rightPreorderEnd = preorderEnd;
+
+      root->left = traversalPreStruct(inorder, leftInorderBegin, leftInorderEnd,  preorder, leftPreorderBegin, leftPreorderEnd);
+      root->right = traversalPreStruct(inorder, rightInorderBegin, rightInorderEnd, preorder, rightPreorderBegin, rightPreorderEnd);
+
+      return root;
+    }
+
+    TreeNode* traversalStruct (vector<int>& inorder, vector<int>& postorder) {
+      if(postorder.size()==0) return NULL;
+
+      int rootValue=postorder[postorder.size()-1];
+      TreeNode* root= new TreeNode(rootValue);
+      
+      if(postorder.size()==1) return root;
+
+      int delimiterIndex;
+      for(delimiterIndex=0;delimiterIndex<inorder.size();delimiterIndex++){
+        if(inorder[delimiterIndex]==rootValue){
+          break;
+        }
+      }
+
+      vector<int> leftInorder(inorder.begin(),inorder.begin()+delimiterIndex);
+      vector<int> rightInorder(inorder.begin()+delimiterIndex+1,inorder.end());
+
+      postorder.resize(postorder.size()-1);
+      vector<int> leftPostorder(postorder.begin(),postorder.begin()+leftInorder.size());
+      vector<int> rightPostorder(postorder.begin()+leftInorder.size() ,postorder.end());
+
+      root->left=traversalStruct(leftInorder,leftPostorder);
+      root->right=traversalStruct(rightInorder,rightPostorder);
+      return root;
+    }
     // void traversal(TreeNode* cur, vector<int>& path, vector<string>& result) {
     //   path.push_back(cur->val);
     //   if(cur->left==nullptr&&cur->right==nullptr){
@@ -77,6 +136,50 @@ public:
     int maxLen = INT_MIN;
     int maxleftValue;
 
+
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+      
+      //中序和后序
+      // if(inorder.size()==0&&postorder.size()==0)return NULL;
+      // return traversalStruct(inorder,postorder);
+
+      //前序和中序
+      if(inorder.size()==0||preorder.size()==0)return NULL;
+      return traversalPreStruct(inorder,0,inorder.size(),preorder,0,preorder.size());
+    }
+
+    void traversal(TreeNode* cur,int count){
+      if(cur->left==nullptr&&cur->right==nullptr&&count==cur->val){
+        results.push_back(path);
+        return;
+      }
+      if(!cur->left&&!cur->right){
+        return;
+      }
+      if(cur->left){
+        path.push_back(cur->left->val);
+        count-=cur->val;
+        traversal(cur->left,count);
+        count+=cur->val;
+        path.pop_back();
+      }
+      if(cur->right){
+        path.push_back(cur->right->val);
+        count-=cur->val;
+        traversal(cur->right,count);
+        count+=cur->val;
+        path.pop_back();
+      }
+      return;
+    }
+    vector<vector<int>> pathSum(TreeNode* root, int targetSum) {
+      results.clear();
+      path.clear();
+      if(root==nullptr) return results;
+      path.push_back(root->val);
+      traversal(root,targetSum);
+      return results;
+    }
     // void traversal(TreeNode* root, int leftLen) {
     //   if(!root->left&&!root->right){
     //     if(leftLen>maxLen){
@@ -235,14 +338,14 @@ public:
       }
       return result;
     }
-    vector<string> binaryTreePaths(TreeNode* root) {
-      vector<string> result;
-      // vector<int> path;
-      string path;
-      if(root==nullptr) return result;
-      traversal(root,path,result);
-      return result;
-    }
+    // vector<string> binaryTreePaths(TreeNode* root) {
+    //   vector<string> result;
+    //   // vector<int> path;
+    //   string path;
+    //   if(root==nullptr) return result;
+    //   traversal(root,path,result);
+    //   return result;
+    // }
     int getHeight(TreeNode* node) {
       if(node ==nullptr){
         return 0;
