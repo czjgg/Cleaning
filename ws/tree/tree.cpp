@@ -48,7 +48,23 @@ private:
     int maxCount;
     int count;
     vector<int> resultOfMode;
-
+    int preval;
+    
+    void traversalToTransGreatSumTree(TreeNode* cur){
+      if(cur==nullptr)return;
+      traversalToTransGreatSumTree(cur->right);
+      cur->val+=preval;
+      preval=cur->val;
+      traversalToTransGreatSumTree(cur->left);
+    }
+    TreeNode* traversalToStructBST(vector<int>& nums,int left,int right){
+      if(left>right) return nullptr;
+      int mid=left+(right-left)/2;
+      TreeNode* cur=new TreeNode(nums[mid]);
+      cur->left=traversalToStructBST(nums,left,mid-1);
+      cur->right=traversalToStructBST(nums,mid+1,right);
+      return cur;
+    }
     void searchBST(TreeNode* cur){
       if(cur==NULL) return;
       searchBST(cur->left);
@@ -174,6 +190,48 @@ public:
     int maxleftValue;
     vector<int> vec98;
 
+    TreeNode* convertBST(TreeNode* root) {
+      preval=0;
+      traversalToTransGreatSumTree(root);
+      return root;
+    }
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+      return traversalToStructBST(nums,0,nums.size()-1);
+    }
+    TreeNode* trimBST(TreeNode* root, int low, int high) {  
+      // 递归法
+      // if(root==nullptr) return nullptr;
+      // if(root->val>high) return trimBST(root->left,low,high);
+      // if(root->val<low) return trimBST(root->right,low,high);
+      // root->left=trimBST(root->left,low,high);
+      // root->right=trimBST(root->right,low,high);
+      // return root;
+
+      //迭代法
+      if(root==nullptr)return nullptr;
+      while(root!=nullptr&&(root->val<low||root->val>high)){
+        if(root->val<low){
+          root=root->right;
+        }else{
+          root=root->left;
+        }
+      }
+      TreeNode* cur=root;
+      while(cur!=nullptr){
+        while (cur->left && cur->left->val < low) {
+                cur->left = cur->left->right;
+            }
+        cur = cur->left;
+      }
+      cur=root;
+      while(cur!=nullptr){
+        while (cur->right && cur->right->val > high) {
+                cur->right = cur->right->left;
+            }
+        cur = cur->right;
+      }
+      return root;
+    }
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
       if(root==q||root==p||root==nullptr) return root;
       TreeNode* left=lowestCommonAncestor(root->left,p,q);
