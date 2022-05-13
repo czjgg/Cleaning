@@ -43,6 +43,43 @@ private:
 
     vector<vector<int>> results;
     vector<int> path;
+    int minGap=INT_MAX;
+    TreeNode* pre;
+    int maxCount;
+    int count;
+    vector<int> resultOfMode;
+
+    void searchBST(TreeNode* cur){
+      if(cur==NULL) return;
+      searchBST(cur->left);
+      if(pre==nullptr){
+        count=1;
+      }else if(pre->val==cur->val){
+        count++;
+      }else{
+        count=1;
+      }
+      pre=cur;
+      if(maxCount==count){
+        resultOfMode.push_back(cur->val);
+      }
+      if(maxCount<count){
+        maxCount=count;
+        resultOfMode.clear();
+        resultOfMode.push_back(cur->val);
+      }
+      searchBST(cur->right);
+      return ;
+    }
+    void traversalToFindMinGap(TreeNode* cur){
+      if(cur==nullptr)return;
+      traversalToFindMinGap(cur->left);
+      if(pre!=nullptr){
+        minGap=min(minGap,cur->val-pre->val);
+      }
+      pre=cur;
+      traversalToFindMinGap(cur->right);
+    }
 
     TreeNode* traversalPreStruct (vector<int>& inorder, int inorderBegin, int inorderEnd, vector<int>& preorder, int preorderBegin, int preorderEnd) {
       if(inorderBegin==inorderEnd) return NULL;
@@ -135,8 +172,19 @@ public:
     bool tag=false;
     int maxLen = INT_MIN;
     int maxleftValue;
+    vector<int> vec98;
 
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+      if(root==q||root==p||root==nullptr) return root;
+      TreeNode* left=lowestCommonAncestor(root->left,p,q);
+      TreeNode* right=lowestCommonAncestor(root->right,p,q);
 
+      if(left!=nullptr&&right!=nullptr) return root;
+      if(left!=nullptr&&right==nullptr) return left;
+      else if(left==nullptr&&right!=nullptr) return right;
+      else return nullptr; 
+
+    }
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
       
       //中序和后序
@@ -147,7 +195,47 @@ public:
       if(inorder.size()==0||preorder.size()==0)return NULL;
       return traversalPreStruct(inorder,0,inorder.size(),preorder,0,preorder.size());
     }
+    vector<int> findMode(TreeNode* root) {
+      count=0;
+      maxCount=0;
+      resultOfMode.clear();
+      pre=NULL;
+      searchBST(root);
+      return resultOfMode;
+    }
+    int getMinimumDifference(TreeNode* root) {
+      traversalToFindMinGap(root);
+      return minGap;
+    }
+    void traversalToVec(TreeNode* root) {
+      if(root==nullptr)return;
+      traversalToVec(root->left);
+      vec98.push_back(root->val);
+      traversalToVec(root->right);
+    }
+    bool isValidBST(TreeNode* root) {
+      vec98.clear();
+      traversalToVec(root);
+      for(int i=1;i<vec98.size();i++){
+        if(vec98[i]<=vec98[i-1]) return false;
+      }
+      return true;
+    }
+    TreeNode* searchBST(TreeNode* root, int val) {
+      if(root==nullptr||root->val==val) return root;
+      if(root->val>val) return searchBST(root->left,val);
+      else return searchBST(root->right,val);
+      return NULL;
+    }
+    TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2) {
+      if(root1==nullptr)return root2;
+      if(root2==nullptr)return root1;
 
+      root1->val+=root2->val;
+      root1->left=mergeTrees(root1->left,root2->left);
+      root1->right=mergeTrees(root1->right,root2->right);
+      return root1;
+    }
     void traversal(TreeNode* cur,int count){
       if(cur->left==nullptr&&cur->right==nullptr&&count==cur->val){
         results.push_back(path);
