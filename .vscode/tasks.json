@@ -4,7 +4,7 @@
         {
  "type": "shell",
  "label": "g++", //这里注意一下，见下文
- "command": "E:\\application\\mingw\\mingw64\\bin\\g++.exe",
+ "command": "G:\\application\\mingw\\bin\\g++.exe",
  "args": [
  "-g",
  "${file}",
@@ -13,13 +13,13 @@
  "-ggdb3",   // 生成和调试有关的信息
  "-Wall",    // 开启额外警告
  "-static-libgcc",   // 静态链接
- "-std=c++17",       // 使用c++17标准
+ "-std=c++14",       // 使用c++17标准
  "-finput-charset=UTF-8",    //输入编译器文本编码 默认为UTF-8
  "-fexec-charset=GB18030",   //输出exe文件的编码
  "-D _USE_MATH_DEFINES"
             ],
  "options": {
- "cwd": "E:\\application\\mingw\\mingw64\\bin\\"
+ "cwd": "G:\\application\\mingw\\bin\\"
             },
  "problemMatcher": [
  "$gcc"

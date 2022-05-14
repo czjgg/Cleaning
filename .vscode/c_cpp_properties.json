@@ -3,11 +3,11 @@
         {
   "name": "MinGW64",
   "intelliSenseMode": "gcc-x64",
-  "compilerPath": "E:\\application\\mingw\\mingw64\\bin\\g++.exe",
+  "compilerPath": "G:\\application\\mingw\\bin\\g++.exe",
   "includePath": [
   "${workspaceFolder}"
             ],
-  "cppStandard": "c++17"
+  "cppStandard": "c++14"
         }
     ],
   "version": 4
