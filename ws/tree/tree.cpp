@@ -188,8 +188,96 @@ public:
     bool tag=false;
     int maxLen = INT_MIN;
     int maxleftValue;
-    vector<int> vec98;
+    vector<int> vec98;   
+    TreeNode* parent;
 
+    TreeNode* deleteNode(TreeNode* root, int key) {
+     if(root==nullptr) return root;
+     if(root->val==key){
+       if(root->left==nullptr&&root->right==nullptr){
+         delete root;
+         return nullptr;
+       }else if(root->left==nullptr){
+         auto temp=root->right;
+         delete root;
+         return temp;
+       }else if(root->right==nullptr){
+         auto temp=root->left;
+         delete root;
+         return temp;
+       }else{
+         TreeNode* temp=root->right;
+         while(temp->left!=nullptr){
+           temp=temp->left;
+         }
+         temp->left=root->left;
+         temp=root->right;
+         delete root;
+         return temp;
+       }
+     }  
+     if(root->val>key){
+       root->left=deleteNode(root->left,key);
+     }
+     if(root->val<key){
+       root->right=deleteNode(root->right,key);
+     }
+     return root;   
+    }
+    void traversalToFindNullChild(TreeNode* cur, int val) {
+      if(cur==nullptr){
+        TreeNode* temp=new TreeNode(val);
+        if(parent->val>val){
+          parent->left=temp;
+        }else{
+          parent->right=temp;
+        }
+        return ;
+      }
+      parent=cur;
+      if(cur->val>val){
+        traversalToFindNullChild(cur->left,val);
+      }
+      if(cur->val<val){
+        traversalToFindNullChild(cur->right,val);
+      }
+      return;
+    }
+    TreeNode* insertIntoBST(TreeNode* root, int val) {
+      parent=new TreeNode(0);
+      if(root==nullptr){
+        return new TreeNode(val);
+      }
+      traversalToFindNullChild(root,val);
+      return root;
+    }
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+      if(root->val>p->val&&root->val>q->val){
+        return lowestCommonAncestor(root->left,p,q);
+      }else if(root->val<p->val&&root->val<q->val){
+        return lowestCommonAncestor(root->right,p,q);
+      }else{
+        return root;
+      }
+    }
+    TreeNode* lowestCommonAncestor1(TreeNode* root, TreeNode* p, TreeNode* q) {
+      if(root==q||root==p||root==nullptr) return root;
+
+      TreeNode* left= lowestCommonAncestor(root->left,p,q);
+      TreeNode* right= lowestCommonAncestor(root->right,p,q);
+
+      if(left!=nullptr&&right!=nullptr){
+        return root;
+      }
+      if(left!=nullptr&&right==nullptr){
+        return left;
+      }else if(left==nullptr&&right!=nullptr){
+        return right;
+      }else{
+        return nullptr;
+      }
+
+    }
     TreeNode* convertBST(TreeNode* root) {
       preval=0;
       traversalToTransGreatSumTree(root);
