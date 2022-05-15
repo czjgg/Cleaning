@@ -11,7 +11,36 @@ class Solution{
 private:
     vector<vector<int>> result; // 存放符合条件结果的集合
     vector<int> path; // 用来存放符合条件结果
+    vector<string> resultStr;
+    string s;
 
+    
+    const string letterMap[10] = {
+        "", // 0
+        "", // 1
+        "abc", // 2
+        "def", // 3
+        "ghi", // 4
+        "jkl", // 5
+        "mno", // 6
+        "pqrs", // 7
+        "tuv", // 8
+        "wxyz", // 9
+    };
+
+    void backtrackingToFindAllString(const string& digits, int index) {
+      if(index==digits.size()){
+        resultStr.push_back(s);
+        return;
+      }
+      int digit=digits[index]-'0';
+      string letters=letterMap[digit];
+      for(int i=0;i<letters.size();i++){
+        s.push_back(letters[i]);
+        backtrackingToFindAllString(digits,index+1);
+        s.pop_back();
+      }
+    }
     void backtrackingSum3(int targetSum, int k, int sum, int startIndex) {
       if(path.size() == k){
         if(sum == targetSum){
@@ -45,6 +74,16 @@ private:
       }
     }
 public:
+
+    vector<string> letterCombinations(string digits) {
+      s.clear();
+      resultStr.clear();
+      if(digits.size()==0){
+        return resultStr;
+      }
+      backtrackingToFindAllString(digits,0);
+      return resultStr;
+    }
     vector<vector<int>> combinationSum3(int k, int n) {
       result.clear();
       path.clear();
