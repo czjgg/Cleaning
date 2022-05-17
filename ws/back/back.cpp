@@ -28,6 +28,35 @@ private:
         "wxyz", // 9
     };
 
+    void backtrackingToFindAllSum2(vector<int>& candidates, int targetSum, int startIndex, int sum){
+      if(sum == targetSum){
+        result.push_back(path);
+        return;
+      }
+      for(int i = startIndex; i < candidates.size() && sum + candidates[i] <= targetSum ; i++){
+        if (i > startIndex && candidates[i] == candidates[i - 1]) {
+                continue;
+        }
+        sum += candidates[i];
+        path.push_back(candidates[i]);
+        backtrackingToFindAllSum(candidates,targetSum,i+1,sum);
+        path.pop_back();
+        sum-=candidates[i];
+      }
+    }
+    void backtrackingToFindAllSum(vector<int>& candidates, int targetSum, int startIndex, int sum){
+      if(sum == targetSum){
+        result.push_back(path);
+        return;
+      }
+      for(int i = startIndex; i < candidates.size()&& sum + candidates[i] <= targetSum; i++){
+        sum += candidates[i];
+        path.push_back(candidates[i]);
+        backtrackingToFindAllSum(candidates,targetSum,i,sum);
+        path.pop_back();
+        sum-=candidates[i];
+      }
+    }
     void backtrackingToFindAllString(const string& digits, int index) {
       if(index==digits.size()){
         resultStr.push_back(s);
@@ -74,7 +103,20 @@ private:
       }
     }
 public:
-
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+      result.clear();
+      path.clear();
+      sort(candidates.begin(),candidates.end());
+      backtrackingToFindAllSum2(candidates,target,0,0);
+      return result; 
+    }
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+      result.clear();
+      path.clear();
+      sort(candidates.begin(),candidates.end());
+      backtrackingToFindAllSum(candidates,target,0,0);
+      return result;  
+    }
     vector<string> letterCombinations(string digits) {
       s.clear();
       resultStr.clear();
