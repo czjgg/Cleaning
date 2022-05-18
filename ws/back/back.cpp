@@ -12,6 +12,8 @@ private:
     vector<vector<int>> result; // 存放符合条件结果的集合
     vector<int> path; // 用来存放符合条件结果
     vector<string> resultStr;
+    vector<string> pathPalindrome;
+    vector<vector<string>> resultPalindrome;
     string s;
 
     
@@ -28,6 +30,30 @@ private:
         "wxyz", // 9
     };
 
+    void backtrackingToDividePalindrome (const string& s, int startIndex) {
+      if(startIndex>=s.size()){
+        resultPalindrome.push_back(pathPalindrome);
+        return ;
+      }
+      for(int i = startIndex; i < s.size(); i++){
+        if(isPalindrome(s, startIndex, i)){
+          string s = s.substr(startIndex, i - startIndex + 1);
+          pathPalindrome.push_back(s);
+        }else{
+          continue;
+        }
+        backtrackingToDividePalindrome(s, i+1);
+        pathPalindrome.pop_back();
+      }
+    }
+    bool isPalindrome(const string& s, int start, int end) {
+      for(int i = start, j = end; i <= j; i++,j--){
+        if(s[i] != s[j]){
+          return false;
+        }
+      }
+      return true;
+    }
     void backtrackingToFindAllSum2(vector<int>& candidates, int targetSum, int startIndex, int sum){
       if(sum == targetSum){
         result.push_back(path);
@@ -103,6 +129,12 @@ private:
       }
     }
 public:
+    vector<vector<string>> partition(string s) {
+      resultPalindrome.clear();
+      pathPalindrome.clear();
+      backtrackingToDividePalindrome(s, 0);
+      return resultPalindrome;
+    }
     vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
       result.clear();
       path.clear();
