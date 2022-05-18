@@ -30,6 +30,14 @@ private:
         "wxyz", // 9
     };
 
+    void backtrackingToFindSubsets(vector<int>& nums, int startIndex){
+      result.push_back(path);
+      for(int i = startIndex; i < nums.size(); i++){
+        path.push_back(nums[i]);
+        backtrackingToFindSubsets(nums, i + 1);
+        path.pop_back();
+      }
+    }
     void backtrackingToCheckIPAddress(string& s, int startIndex, int pointNum){
       if(pointNum == 3){
         if(isValidIPAddress(s, startIndex, s.size()-1)){
@@ -167,6 +175,12 @@ private:
       }
     }
 public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+      path.clear();
+      result.clear();
+      backtrackingToFindSubsets(nums,0);
+      return result;
+    }
     vector<string> restoreIpAddresses(string s) {
       resultStr.clear();
       if(s.size() > 12) return resultStr;
