@@ -30,6 +30,66 @@ private:
         "wxyz", // 9
     };
 
+    void backtrackingToFIndPermute2 (vector<int>& nums, vector<bool>& used){
+      if(path.size() == nums.size()){
+        result.push_back(path);
+        return;
+      }
+      for(int i = 0; i < nums.size(); i++){
+        if(i > 0 && nums[i] == nums[i - 1] && used[i -1] == false){
+          continue;
+        }
+        if(used[i] == false){
+          used[i] = true;
+          path.push_back(nums[i]);
+          backtrackingToFIndPermute2(nums, used);
+          path.pop_back();
+          used[i] = false;
+        }
+      }
+    }
+    void backtrackingToFIndPermute (vector<int>& nums, vector<bool>& used){
+      if(path.size() == nums.size()){
+        result.push_back(path);
+        return;
+      }
+      for(int i = 0; i < nums.size(); i++){
+        if(used[i]){
+          continue;
+        }
+        used[i] = true;
+        path.push_back(nums[i]);
+        backtrackingToFIndPermute(nums, used);
+        path.pop_back();
+        used[i] = false;
+      }
+    }
+    void backtrackingToFindSubsequences(vector<int>& nums, int startIndex) {
+      if(path.size()>1){
+        result.push_back(path);
+      }
+      int used[201]={0};
+      for(int i = startIndex; i < nums.size(); i++){
+        if(!path.empty() && nums[i] < path.back() || used[nums[i] + 100] == 1){
+          continue;
+        }
+        used[nums[i] + 100] = 1;
+        path.push_back(nums[i]);
+        backtrackingToFindSubsequences(nums, i +1);
+        path.pop_back();
+      }    
+    }
+    void backtrackingToFindSubsets2(vector<int>& nums, int startIndex){
+      result.push_back(path);
+      for(int i = startIndex; i < nums.size(); i++){
+        if(i > 0 && nums[i] == nums[i-1] && i != startIndex){
+          continue;
+        }
+        path.push_back(nums[i]);
+        backtrackingToFindSubsets(nums, i + 1);
+        path.pop_back();
+      }
+    }
     void backtrackingToFindSubsets(vector<int>& nums, int startIndex){
       result.push_back(path);
       for(int i = startIndex; i < nums.size(); i++){
@@ -162,7 +222,6 @@ private:
         sum-=i;
       }
     }
-
     void backtracking(int n, int k, int startIndex) {
       if(path.size()==k){
         result.push_back(path);
@@ -175,6 +234,35 @@ private:
       }
     }
 public:
+
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+      result.clear();
+      path.clear();
+      vector<bool> used(nums.size(), false);
+      sort(nums.begin(),nums.end());
+      backtrackingToFIndPermute2(nums, used);
+      return result;
+    }
+    vector<vector<int>> permute(vector<int>& nums) {
+      result.clear();
+      path.clear();
+      vector<bool> used(nums.size(), false);
+      backtrackingToFIndPermute(nums, used);
+      return result;
+    }
+    vector<vector<int>> findSubsequences(vector<int>& nums) {
+      path.clear();
+      result.clear();
+      backtrackingToFindSubsequences(nums, 0);
+      return result;
+    }
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+      path.clear();
+      result.clear();
+      sort(nums.begin(),nums.end());
+      backtrackingToFindSubsets2(nums,0);
+      return result;
+    } 
     vector<vector<int>> subsets(vector<int>& nums) {
       path.clear();
       result.clear();
