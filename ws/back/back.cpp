@@ -1,6 +1,7 @@
 #include<iostream>
 #include<vector>
 #include<unordered_map>
+#include<map>
 #include<unordered_set>
 #include<cstring>
 #include<math.h>
@@ -9,11 +10,13 @@ using namespace std;
 
 class Solution{
 private:
+    unordered_map<string, map<string, int>> targets;
     vector<vector<int>> result; // 存放符合条件结果的集合
     vector<int> path; // 用来存放符合条件结果
     vector<string> resultStr;
     vector<string> pathPalindrome;
     vector<vector<string>> resultPalindrome;
+    vector<vector<string>> resultQueen;
     string s;
 
     
@@ -30,6 +33,92 @@ private:
         "wxyz", // 9
     };
 
+    bool backtrackingToShuDu(vector<vector<char>>& board){
+      for(int i = 0; i < board.size(); i++){
+        for( int j = 0; j < board[0].size(); j++){
+          if(board[i][j] != '.'){
+            continue;
+          }
+          for(char k = '1'; k <= '9'; k++){
+            if(isValidBoard(i, j , k, board)){
+              board[i][j] = k;
+              if(backtrackingToShuDu(board)) return true;
+              board[i][j] = '.';
+            }
+          }
+          return false;
+        }
+      }
+      return true;
+    }
+    bool isValidBoard(int row, int col,char val,vector<vector<char>>& board){
+      for(int i = 0; i < 9; i++){
+        if(board[row][i] == val){
+          return false;
+        }
+      }
+      for(int j = 0; j < 9; j++){
+        if(board[j][col] == val){
+          return false;
+        }
+      }
+      int startRow = (row/3) * 3;
+      int startCol = (col/3) * 3;
+      for(int i = startRow; i < startRow + 3; i++){
+        for(int j = startCol; j < startCol + 3; j++){
+          if(board[i][j] == val){
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+    void backtrackingNQueen(int n, int row, vector<string>& chessboard) {
+      if(row == n){
+        resultQueen.push_back(chessboard);
+        return;
+      }
+      for(int col = 0; col < n; col++){
+        if(isValidChess(row, col, chessboard, n)){
+          chessboard[row][col] = 'Q';
+          backtrackingNQueen(n, row + 1, chessboard);
+          chessboard[row][col] = '.';
+        }
+      }
+    }
+    bool isValidChess(int row, int col, vector<string>& chessboard, int n) {
+      for(int i = 0; i < row; i++){
+        if(chessboard[i][col] == 'Q'){
+          return false;
+        }
+      }
+      for(int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--){
+        if(chessboard[i][j] == 'Q'){
+          return false;
+        }
+      }
+      for(int i = row - 1, j= col + 1; i >= 0 && j < n; i--, j++){
+        if(chessboard[i][j] == 'Q'){
+          return false;
+        }
+      }
+      return true;
+    }
+    bool backtrackingToFindRoute(int ticketNum, vector<string>& result) {
+      if(result.size() == ticketNum + 1){
+        return true;
+      }
+      for(pair<const string , int>& target: targets[result[result.size()-1]]){
+        if(target.second > 0){
+          result.push_back(target.first);
+          target.second--;
+          if(backtrackingToFindRoute(ticketNum, result)) return true;
+          target.second++;
+          result.pop_back();
+        }
+      }
+      return false;
+    }
     void backtrackingToFIndPermute2 (vector<int>& nums, vector<bool>& used){
       if(path.size() == nums.size()){
         result.push_back(path);
@@ -235,6 +324,25 @@ private:
     }
 public:
 
+    void solveSudoku(vector<vector<char>>& board) {
+      backtrackingToShuDu(board);
+    }
+    vector<vector<string>> solveNQueens(int n) {
+      resultQueen.clear();
+      vector<string> chessboard(n, string(n, '.'));
+      backtrackingNQueen(n, 0, chessboard);
+      return resultQueen;
+    }
+    vector<string> findItinerary(vector<vector<string>>& tickets) {
+      targets.clear();
+      vector<string> resultRoute;
+      for(const vector<string>& vec : tickets){
+        targets[vec[0]][vec[1]]++;
+      }
+      resultRoute.push_back("JFK");
+      backtrackingToFindRoute(tickets.size(),resultRoute);
+      return resultRoute;
+    }
     vector<vector<int>> permuteUnique(vector<int>& nums) {
       result.clear();
       path.clear();
@@ -325,12 +433,13 @@ int main(){
   vector<int> c({-1,2});
   vector<int> d({0,2});
   Solution A;
-  vector<vector<int>> result=A.combine(4,2);
-  for(vector<int> a:result){
-    for(int b: a){
-      cout<<b;
-    }
-    cout<<endl;
-  }
+  vector<vector<char>> e={{'5','3','.','.','7','.','.','.','.'},{'6','.','.','1','9','5','.','.','.'},{'.','9','8','.','.','.','.','6','.'},{'8','.','.','.','6','.','.','.','3'},{'4','.','.','8','.','3','.','.','1'},{'7','.','.','.','2','.','.','.','6'},{'.','6','.','.','.','.','2','8','.'},{'.','.','.','4','1','9','.','.','5'},{'.','.','.','.','8','.','.','7','9'}};
+  A.solveSudoku(e);
+  // for(vector<int> a:result){
+  //   for(int b: a){
+  //     cout<<b;
+  //   }
+  //   cout<<endl;
+  // }
   getchar();
 }
