@@ -6,6 +6,7 @@
     "*.wxss": "css",
     "new": "cpp",
     "stack": "cpp",
-    "ostream": "cpp"
+    "ostream": "cpp",
+    "unordered_set": "cpp"
   }
 }
