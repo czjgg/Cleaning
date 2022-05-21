@@ -260,7 +260,7 @@ private:
         }
         sum += candidates[i];
         path.push_back(candidates[i]);
-        backtrackingToFindAllSum(candidates,targetSum,i+1,sum);
+        backtrackingToFindAllSum2(candidates,targetSum,i+1,sum);
         path.pop_back();
         sum-=candidates[i];
       }
