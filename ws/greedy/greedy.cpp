@@ -22,17 +22,82 @@ class Solution{
     // }
 
     // 从小到大,按照第一个元素排序
-    // static bool cmp(const vector<int>& a, const vector<int>& b) {
-    //     return a[0] < b[0];
-    // }
-    // 按照区间右边界排序
-    static bool cmp (const vector<int>& a, const vector<int>& b) {
-        return a[1] < b[1];
+    static bool cmp(const vector<int>& a, const vector<int>& b) {
+        return a[0] < b[0];
     }
+
+    // 按照区间右边界排序
+    // static bool cmp (const vector<int>& a, const vector<int>& b) {
+    //     return a[1] < b[1];
+    // }
 private:
     
 public:
     int dp[1005][2];
+    int maxProfit(vector<int>& prices, int fee) {
+        int result = 0;
+        int minPrice = prices[0];
+        for(int i = 1; i < prices.size(); i++){
+          if(prices[i] < minPrice){
+            minPrice = prices[i];
+          }
+          if(prices[i] >= minPrice && prices[i] <= minPrice + fee){
+            continue;
+          }
+          if(prices[i] > minPrice + fee){
+            result += prices[i] - minPrice - fee;
+            minPrice = prices[i] - fee;
+          }
+        }
+        return result;
+    }
+    int monotoneIncreasingDigits(int n) {
+      string strNum = to_string(n);
+      int flag = strNum.size();
+      for(int i = strNum.size() - 1; i > 0; i--){
+        if(strNum[i - 1] > strNum[i]){
+          strNum[i - 1]--;
+          flag = i;
+        }
+      }
+      for(int i = flag; i < strNum.size(); i++){
+        strNum[i] = '9';
+      }
+      return stoi(strNum);
+    }
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+      vector<vector<int>> result;
+      if(intervals.size() == 0) return result;
+      sort(intervals.begin(), intervals.end(),cmp);
+
+      result.push_back(intervals[0]);
+      for(int i = 1; i < intervals.size(); i++){
+        if(result.back()[1] >= intervals[i][0]){
+          result.back()[1] = max(result.back()[1], intervals[i][1]);
+        }else{
+          result.push_back(intervals[i]);
+        }
+      }
+      return result;
+    }
+    vector<int> partitionLabels(string s) {
+      int hash[27];
+      for(int i = 0; i < s.size(); i++){
+        hash[s[i] - 'a'] = i;
+      }
+      vector<int> result;
+      int count = 0;
+      int end = 0;
+      for(int i = 0; i < s.size(); i++){
+        end = max(end, hash[s[i] - 'a']);
+        count++;
+        if(end == i){
+          result.push_back(count);
+          count = 0;
+        }
+      }
+      return result;
+    }
     int eraseOverlapIntervals(vector<vector<int>>& intervals) {
       if(intervals.size() == 0) return 0;
       sort(intervals.begin(), intervals.end(), cmp);

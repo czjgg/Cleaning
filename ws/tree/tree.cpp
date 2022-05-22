@@ -49,7 +49,24 @@ private:
     int count;
     vector<int> resultOfMode;
     int preval;
-    
+    int result;
+
+    int traversal(TreeNode* cur) {
+      if(cur == nullptr) return 2;
+
+      int left = traversal(cur->left);
+      int right = traversal(cur->right);
+
+      if(left == 2 && right == 2){
+        return 0;
+      }
+      if(left == 0 || right == 0) {
+        result++;
+        return 1;
+      }
+      if(left == 1 || right == 1) return 2;
+      return -1;
+    }    
     void traversalToTransGreatSumTree(TreeNode* cur){
       if(cur==nullptr)return;
       traversalToTransGreatSumTree(cur->right);
@@ -190,7 +207,14 @@ public:
     int maxleftValue;
     vector<int> vec98;   
     TreeNode* parent;
-
+    int minCameraCover(TreeNode* root) {
+        result = 0;
+        // 情况4
+        if (traversal(root) == 0) { // root 无覆盖
+            result++;
+        }
+        return result;
+    }
     TreeNode* deleteNode(TreeNode* root, int key) {
      if(root==nullptr) return root;
      if(root->val==key){
