@@ -8,7 +8,7 @@
 using namespace std;
 class Solution {
 public:
-  int 0_1backBag(vector<int>& weight, vector<int>& value,int bagWeight){
+  int backBag(vector<int>& weight, vector<int>& value,int bagWeight){
     // 二维数组法
     // vector<vector<int>> dp(weight.size(), vector<int>(bagWeight + 1, 0));
     // for(int j = weight[0]; i < bagWeight; i++){
@@ -24,8 +24,8 @@ public:
 
     // 一维数组
     vector<int> dp(bagWeight + 1,0);
-    for(i = 0; i < weight.size(); i++){
-      for(j = bagWeight; j >= weight[i]; j--){
+    for(int i = 0; i < weight.size(); i++){
+      for(int j = bagWeight; j >= weight[i]; j--){
         dp[j] = max(dp[j], dp[j - weight[i]] + value[i]);
       }
     }
