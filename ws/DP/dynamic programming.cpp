@@ -8,7 +8,6 @@
 using namespace std;
 class Solution {
 public:
-<<<<<<< HEAD
 
   int findTargetSumWays(vector<int>& nums, int target) {
     int sum =0;
@@ -44,7 +43,7 @@ public:
     //   cout<< a<<endl;
     // }
     return sum - 2 * dp[target];
-=======
+  }
   int backBag(vector<int>& weight, vector<int>& value,int bagWeight){
     // 二维数组法
     // vector<vector<int>> dp(weight.size(), vector<int>(bagWeight + 1, 0));
@@ -88,7 +87,6 @@ public:
       }
     }
     return dp[n];
->>>>>>> 79d21d38f41ceafa6e05a3dfca4b3028a77d8ab5
   }
   int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
     int m = obstacleGrid.size();
