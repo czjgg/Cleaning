@@ -8,6 +8,7 @@
 using namespace std;
 class Solution {
 public:
+<<<<<<< HEAD
 
   int findTargetSumWays(vector<int>& nums, int target) {
     int sum =0;
@@ -43,6 +44,51 @@ public:
     //   cout<< a<<endl;
     // }
     return sum - 2 * dp[target];
+=======
+  int backBag(vector<int>& weight, vector<int>& value,int bagWeight){
+    // 二维数组法
+    // vector<vector<int>> dp(weight.size(), vector<int>(bagWeight + 1, 0));
+    // for(int j = weight[0]; i < bagWeight; i++){
+    //   dp[0][j] = value[0];
+    // }
+    // for(int i = 1; i < weight.size(); i++){
+    //   for(int j = 0; j <= bagWeight; j++){
+    //     if(j < weight[i]) dp[i][j] = dp[i-1][j];
+    //     else dp[i][j] = max(dp[i-1][j], dp[i - 1][j - weight[i]] + value[i]);
+    //   }
+    // }
+    // return dp[weight.size() - 1][bagWeight];
+
+    // 一维数组
+    vector<int> dp(bagWeight + 1,0);
+    for(int i = 0; i < weight.size(); i++){
+      for(int j = bagWeight; j >= weight[i]; j--){
+        dp[j] = max(dp[j], dp[j - weight[i]] + value[i]);
+      }
+    }
+    return dp[bagWeight];
+  }
+
+  int numTrees(int n) {
+    vector<int> dp(n + 1);
+    dp[0] = 1;
+    for(int i = 1; i <= n; i++){
+      for(int j = 1; j <= i; j++){
+        dp[i] += dp[j - 1] * dp[i - j];
+      }
+    }
+    return dp[n];
+  }
+  int integerBreak(int n) {
+    vector<int> dp(n + 1);
+    dp[2]= 1;
+    for(int i = 3; i <= n; i++){
+      for(int j = 1; j < i-1; j++){
+        dp[i] = max(dp[i], max(dp[i-j] * j, (i - j) * j));
+      }
+    }
+    return dp[n];
+>>>>>>> 79d21d38f41ceafa6e05a3dfca4b3028a77d8ab5
   }
   int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
     int m = obstacleGrid.size();
