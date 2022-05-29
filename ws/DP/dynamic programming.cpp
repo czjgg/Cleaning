@@ -8,6 +8,42 @@
 using namespace std;
 class Solution {
 public:
+
+  int findTargetSumWays(vector<int>& nums, int target) {
+    int sum =0;
+    int numsSize = nums.size();
+    for(int i = 0; i < numsSize; i++){
+      sum += nums[i];
+    }
+    if((sum + target)% 2 == 1) return 0;
+    if(abs(target) > sum) return 0;
+    int numsLen = (sum + target) / 2;
+    vector<int> dp(numsLen + 1, 0);
+    dp[0] = 1;
+    for(int i = 0; i < numsSize; i++){
+      for(int j = numsLen; j >= nums[i]; j--){
+        dp[j] += dp[j - nums[i]];
+      }
+    }
+    return dp[numsLen];      
+  }
+  int lastStoneWeightII(vector<int>& stones) {
+    int sum = 0;
+    for(int i = 0; i < stones.size(); i++){
+      sum += stones[i];
+    }
+    int target = sum/2;
+    vector<int> dp(target + 1, 0);
+    for(int i = 0; i < stones.size(); i++){
+      for(int j = target; j >= stones[i]; j--){
+        dp[j] = max(dp[j], dp[j - stones[i]] + stones[i]);
+      }
+    }
+    // for( auto a : dp){
+    //   cout<< a<<endl;
+    // }
+    return sum - 2 * dp[target];
+  }
   int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
     int m = obstacleGrid.size();
     int n = obstacleGrid.size();
