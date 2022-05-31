@@ -9,6 +9,33 @@ using namespace std;
 class Solution {
 public:
 
+  int change(int amount, vector<int>& coins) {
+    vector<int> dp(amount + 1, 0);
+    dp[0] = 1;
+    for(int i = 0; i < coins.size(); i++){
+      for(int j = coins[i]; j <= amount; j++){
+        dp[j] = max(dp[j], dp[j - coins[i]] + 1);
+      }
+    }
+    return dp[amount];
+  }
+  int findMaxForm(vector<string>& strs, int m, int n) {
+    vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+    int oneSum,zeroSum;
+    for(string str: strs){
+      oneSum = 0; zeroSum = 0;
+      for(char c : str){
+        if(c == '0') zeroSum++;
+        else oneSum++;
+      }
+      for(int i = m; i >= zeroSum; i--){
+        for(int j = n; j >= oneSum; j--){
+          dp[i][j] = max(dp[i][j], dp[i - zeroSum][j - oneSum] + 1);
+        }
+      }
+    }
+    return dp[m][n];
+  }
   int findTargetSumWays(vector<int>& nums, int target) {
     int sum =0;
     int numsSize = nums.size();
