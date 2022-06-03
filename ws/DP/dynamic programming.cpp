@@ -8,6 +8,47 @@
 using namespace std;
 class Solution {
 public:
+
+  int rob(vector<int>& nums) {
+    if(nums.size() == 0) return 0;
+    if(nums.size() == 1) return nums[0];
+    vector<int> dp(nums.size(), 0);
+    dp[0] = nums[0];dp[1] = max(dp[0],nums[1]);
+    for(int i = 2; i <= nums.size(); i++){
+      dp[i]= max(dp[i - 1], dp[i - 2] + nums[i]);
+    }
+    return dp[nums.size()];
+  }  
+  bool wordBreak(string s, vector<string>& wordDict) {
+    unordered_set<string> word(wordDict.begin(),wordDict.end());
+    vector<bool> dp(s.size() + 1, false);
+    dp[0] = true;
+    for(int i = 1; i <= s.size(); i++){
+      for(int j = 0; j <= i; j++){
+        string temp = s.substr(j, i - j);
+        if(word.find(temp) != word.end() && dp[j] == true){
+          dp[i] = true;
+        }
+      }
+    }
+    return dp[s.size()];
+  }
+  bool canPartition(vector<int>& nums) {
+    int sum = 0;
+    vector<int> dp(10001, 0);
+    int numsSize = nums.size();
+    for(int i = 0; i < numsSize; i++){
+      sum += nums[i];
+    }
+    if(sum % 2 == 1) return false;
+    sum /= 2;
+    for(int i = 0; i < numsSize; i++){
+      for(int j = sum; j >= nums[i]; j--){
+        dp[j] = max(dp[j], dp[j - nums[i]] + nums[i]);
+      }
+    }
+    return dp[sum] == sum; 
+  }
   int numSquares(int n) {
     vector<int> dp(n + 1, INT_MAX);
     dp[0] = 0;
