@@ -17,6 +17,19 @@ struct TreeNode {
 };
 class Solution {
 public:
+  int findLengthOfLCIS(vector<int>& nums) {
+    int len = nums.size();
+    if(len == 0) return 0;
+    int result = 1;
+    vector<int> dp(len, 1);
+    for(int i = 1; i < len; i++){
+      if(nums[i] > nums[i - 1]){
+        dp[i] = dp[i - 1] + 1;
+      }
+      if(dp[i] > result) result = dp[i];
+    }
+    return result;
+  }
   int lengthOfLIS(vector<int>& nums) {
     int len = nums.size();
     if(len < 2) return len;
