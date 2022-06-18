@@ -17,6 +17,19 @@ struct TreeNode {
 };
 class Solution {
 public:
+  int countSubstrings(string s) {
+    vector<vector<int>> dp(s.size(),vector<int>(s.size(),false));
+    int result = 0;
+    for(int i = s.size() - 1; i >= 0; i--){
+      for(int j = i; j < s.size(); j++){
+        if(s[i] == s[j] && ((i - j <= 1) || dp[i + 1][j - 1])){
+          result++;
+          dp[i][j] = true;
+        }
+      }
+    }
+    return result;
+  }
   int minDistance(string word1, string word2) {
     vector<vector<int>> dp(word1.size() + 1,vector<int>(word2.size() + 1));
     for(int i = 0; i <= word1.size(); i++) {
