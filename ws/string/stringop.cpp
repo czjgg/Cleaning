@@ -5,6 +5,34 @@
 using namespace std;
 class Solution {
 public:
+  int extent(const string& s, int i ,int j,int n){
+    int res = 0;
+    while(i >= 0 && j <= n && s[i] == s[j]){
+      res++;
+      i--;
+      j++;
+    }
+    return res;
+  }
+  string longestPalindrome(string s) {
+    int result = 0;
+    int left,right;
+    for(int i = 0; i < s.size(); i++){
+      int cen = extent(s, i, i, s.size());
+      if(cen * 2 - 1 > result){
+        left = i - (cen - 1) ;
+        right = i + (cen - 1) ;
+        result = cen * 2 - 1;
+      }
+      int mid = extent(s, i, i + 1, s.size());
+      if(mid * 2 > result){
+        left = i - mid + 1;
+        right = i + mid ;
+        result = 2 * mid;
+      }
+    }
+    return s.substr(left,right - left + 1);
+  }
   void getnext(int* next,const string& s){
     int j=0;
     next[0]=0;
