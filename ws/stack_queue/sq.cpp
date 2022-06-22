@@ -72,6 +72,21 @@ public:
 class deQueue {
   public:
     deque<int> que;
+    vector<int> nextGreaterElements(vector<int>& nums) {
+      stack<int> st;
+      vector<int> result(nums.size(), - 1);
+      if(nums.size() == 0) return result;
+      st.push(0);
+      for (int i = 0; i < nums.size() * 2; i++) {
+            // 模拟遍历两边nums，注意一下都是用i % nums.size()来操作
+            while (!st.empty() && nums[i % nums.size()] > nums[st.top()]) {
+                result[st.top()] = nums[i % nums.size()];
+                st.pop();
+            }
+            st.push(i % nums.size());
+        }
+      return result;
+    }
     vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
       stack<int> st;
       vector<int> result(nums1.size(), - 1);
