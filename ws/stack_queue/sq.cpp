@@ -72,6 +72,43 @@ public:
 class deQueue {
   public:
     deque<int> que;
+    int largestRectangleArea(vector<int>& heights) {
+      //单调栈思路
+      stack<int> st;
+      heights.insert(heights.begin(),0);
+      heights.push_back(0);
+      st.push(0);
+      int result = 0;
+      for(int i = 1; i < heights.size(); i++){
+        while(heights[i] < heights[st.top()]){
+          int mid = st.top();
+          st.pop();
+          int w = i - st.top() - 1;
+          result = max(heights[mid] * w, result);
+        }
+        st.push(i);
+      }
+      return result;
+      // 动态规划思路
+      // int result = 0;
+      // vector<int> lHeights(heights.size(), -1);
+      // vector<int> rHeights(heights.size(), heights.size());
+      // for(int i = 1; i < heights.size() ; i++){
+      //   int t = i - 1;
+      //   while(t >= 0 && heights[t] >= heights[i]) t = lHeights[t];
+      //   lHeights[i] = t;
+      // }
+      // for(int i = heights.size() - 2; i >= 0; i--){
+      //   int t = i + 1;
+      //   while(t < heights.size() && heights[t] > heights[i]) t = rHeights[t];
+      //   rHeights[i] = t;
+      // }
+      // for(int i = 0; i < heights.size(); i++){
+      //   int m = heights[i] * (rHeights[i] - lHeights[i] - 1);
+      //   if(m > result) result = m;
+      // }
+      // return result;
+    }
     int trap(vector<int>& height) {
       if(height.size() <= 2) return 0;
       stack<int> st;
