@@ -5,6 +5,18 @@
 using namespace std;
 class Solution {
 public:
+  vector<int> smallerNumbersThanCurrent(vector<int>& nums) {
+    vector<int> vec = nums;
+    sort(vec.begin(),vec.end());
+    int hash[101];
+    for(int i = vec.size() - 1; i >= 0; i--){
+      hash[vec[i]] = i;
+    }
+    for(int i = 0; i < nums.size(); i++){
+      vec[i]=hash[nums[i]];
+    }
+    return vec;
+  }
   vector<int> spiralOrder(vector<vector<int>>& matrix) {
     int m = matrix.size();
     int n = matrix[0].size();
