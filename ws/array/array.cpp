@@ -5,6 +5,28 @@
 using namespace std;
 class Solution {
 public:
+  bool validMountainArray(vector<int>& arr) {
+    int left = 0;
+    int right = arr.size() - 1;
+    if(right < 2) return false;
+    for(int i = 0; i < arr.size() - 1; i++){
+      if(arr[i + 1] > arr[i]){
+        ++left;
+      }else{
+        break;
+      }
+    }
+    for(int i = arr.size() - 1; i > 0; i--){
+      if(arr[i - 1] > arr[i]){
+        --right;
+      }else{
+        break;
+      }
+    }
+    if(left == arr.size() - 1 || right == 0) return false;
+    if(left == right) return true;
+    return false;
+  }
   vector<int> smallerNumbersThanCurrent(vector<int>& nums) {
     vector<int> vec = nums;
     sort(vec.begin(),vec.end());
