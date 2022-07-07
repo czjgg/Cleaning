@@ -5,6 +5,37 @@
 using namespace std;
 class Solution {
 public:
+  void moveZeroes(vector<int>& nums) {
+    int slow = 0;
+    for(int fast = 0; fast < nums.size();fast++){
+      if(nums[fast] == 0){
+        continue;
+      }else{
+        nums[slow] = nums[fast];
+        slow++;
+      }
+    }
+    for(;slow < nums.size(); slow++){
+      nums[slow] = 0;
+    }
+  }
+  bool uniqueOccurrences(vector<int>& arr) {
+    int count[2002]={0};
+    for(int i = 0; i < arr.size(); i++){
+      ++count[arr[i] + 1000];
+    }
+    bool fre[2002] = {false};
+    for(int i = 0; i < 2002; i++){
+      if(count[i]){
+        if(fre[count[i]] == false){
+          fre[count[i]] = true;
+        }else {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
   bool validMountainArray(vector<int>& arr) {
     int left = 0;
     int right = arr.size() - 1;
