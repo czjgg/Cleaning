@@ -5,6 +5,22 @@
 using namespace std;
 class Solution {
 public:
+  void reverse(vector<int>& nums, int head, int last){
+    int size = last - head;
+    for(int i = head; i < head + size / 2; i++){
+      int temp = nums[i];
+      nums[i] = nums[last- (i - head) - 1];
+      nums[last - (i - head) - 1] = temp;
+    }
+    return ;
+  }
+  void rotate(vector<int>& nums, int k) {
+    k = k % nums.size();
+    reverse(nums, 0, nums.size());
+    reverse(nums, 0, k);
+    reverse(nums, k, nums.size());
+    return;
+  }
   void moveZeroes(vector<int>& nums) {
     int slow = 0;
     for(int fast = 0; fast < nums.size();fast++){
