@@ -5,6 +5,34 @@
 using namespace std;
 class Solution {
 public:
+  vector<int> searchRange(vector<int>& nums, int target) {
+    if(nums.size() == 0||target < nums[0] || target > nums[nums.size() - 1]) return {-1, -1};
+    int leftBorder,rightBorder;
+    int left = 0, right = nums.size();
+    int index = 0;
+    while(left < right){
+      index = (left + right) / 2;
+      if(nums[index] == target){
+        break;
+      }else if(nums[index] < target){
+        left = index + 1;
+      }else{
+        right = index;
+      }
+    }
+    if(left >= right) return {-1, -1};
+    int temp = index;
+    while(index >=0 && nums[index] == target){
+      leftBorder = index;
+      --index;
+    }
+    index = temp;
+    while(index < nums.size()&& nums[index] == target){
+      rightBorder = index;
+      ++index;
+    }
+    return {leftBorder, rightBorder};
+  }
   int pivotIndex(vector<int>& nums) {
         int sum = 0;
         for (int num : nums) sum += num; // 求和
@@ -142,10 +170,13 @@ public:
   }
 };
 int main(){
+  vector<int> a={1,1,2,3,4};
   vector<char> b={'a','b','c','d','e','f','g'};
   string c="asdfasdfasdfasdf";
   string e="acacdef";
   Solution A;
-  //for(auto c:b)
+  for(auto f:A.searchRange(a,1)){
+    cout<<f<<endl;
+  }
   getchar();
 }
