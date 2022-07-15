@@ -5,6 +5,18 @@
 using namespace std;
 class Solution {
 public:
+  vector<int> sortArrayByParityII(vector<int>& nums) {
+    int index=0, oddIndex=1;
+    for(; index < nums.size(); index+= 2){
+      if(nums[index] % 2 == 1){
+        while(nums[oddIndex] % 2 == 1){
+          oddIndex += 2;
+        }
+        swap(nums[index], nums[oddIndex]);
+      }
+    }
+    return nums;
+  }
   vector<int> searchRange(vector<int>& nums, int target) {
     if(nums.size() == 0||target < nums[0] || target > nums[nums.size() - 1]) return {-1, -1};
     int leftBorder,rightBorder;
