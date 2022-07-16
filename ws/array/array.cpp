@@ -5,6 +5,20 @@
 using namespace std;
 class Solution {
 public:
+  int searchInsert(vector<int>& nums, int target) {
+    int left = 0, right = nums.size();
+    while(left < right){
+      int mid = left + (right - left) / 2;
+      if(nums[mid] > target){
+        left = right;
+      }else if(nums[mid] < target){
+        right = mid;
+      }else{
+        return mid;
+      }
+    }
+    return right;
+  }
   vector<int> sortArrayByParityII(vector<int>& nums) {
     int index=0, oddIndex=1;
     for(; index < nums.size(); index+= 2){
