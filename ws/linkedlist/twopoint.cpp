@@ -14,6 +14,20 @@ void addAtHead(int val,ListNode* _dummyhead) {
 }
 class Solution {
 public:
+    ListNode* swapPairs(ListNode* head) {
+      ListNode *dummyHead = new ListNode(0);
+      dummyHead->next = head;
+      ListNode *cur = dummyHead;
+      while(cur->next != nullptr&& cur->next->next!= nullptr){
+        ListNode *temp = cur->next;
+        ListNode *temp2= cur->next->next->next;
+        cur->next = cur->next->next;
+        cur->next->next=temp;
+        cur->next->next->next = temp2;
+        cur = cur->next->next;
+      }
+      return dummyHead->next;
+    }
     ListNode *detectCycle(ListNode *head) {
         ListNode *fast_p=head;
         ListNode *slow_p=head;
