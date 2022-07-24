@@ -14,6 +14,82 @@ void addAtHead(int val,ListNode* _dummyhead) {
 }
 class Solution {
 public:
+    bool hasCycle(ListNode *head) {
+        ListNode* dummyHead = new ListNode(0);
+        dummyHead->next = head;
+        ListNode* fast= dummyHead;
+        ListNode* slow= dummyHead;
+        while(fast){
+          fast = fast->next->next;
+          slow = slow->next;
+          if(fast == slow){
+            return true;
+          }
+        }
+        return false;
+    }
+    void reorderList(ListNode* head) {
+      ListNode* fast = head;
+      ListNode* slow = head;
+      while(fast && fast->next){
+        slow = slow->next;
+        fast = fast->next->next;
+      }
+      ListNode* temp=slow->next;
+      slow->next = nullptr;
+      ListNode* cur1 = head;
+      ListNode* cur2 = reverseList(temp);
+      bool isLeft = true;
+      ListNode* temp2;
+      while(cur1 && cur2){
+        if(isLeft){
+          temp2 = cur1->next;
+          cur1->next = cur2;
+          cur1 = temp2;
+          isLeft = !isLeft;
+        }else{
+          temp2 = cur2->next;
+          cur2->next = cur1;
+          cur2 = temp2;
+          isLeft = !isLeft;
+        }
+      }
+    }
+    bool isPalindrome(ListNode* head) {
+      ListNode* fast = head;
+      ListNode* slow = head;
+      ListNode* pre = head;
+      while(fast && fast->next){
+        pre = slow;
+        slow = slow -> next;
+        fast = fast -> next->next;
+      }
+      pre ->next=nullptr;
+      ListNode* cur1 = head;
+      ListNode* cur2 = reverseList(slow);
+
+      while(cur1){
+        if(cur1->val != cur2->val){
+          return false;
+        }else{
+          cur1 = cur1->next;
+          cur2 = cur2->next;
+        }
+      }
+      return true;
+    }
+    ListNode* reverseList(ListNode* head) {
+        ListNode* temp; // 保存cur的下一个节点
+        ListNode* cur = head;
+        ListNode* pre = nullptr;
+        while(cur){
+          temp=cur->next;
+          cur->next = pre;
+          pre = cur;
+          cur = temp;
+        }
+        return pre;
+    }
     ListNode* swapPairs(ListNode* head) {
       ListNode *dummyHead = new ListNode(0);
       dummyHead->next = head;
@@ -102,7 +178,7 @@ public:
     delete temp;
     return _dummyhead->next;   
 }
-ListNode* swapPairs(ListNode* head) {
+    ListNode* swapPairs(ListNode* head) {
         ListNode* _dummyhead=new ListNode();
         _dummyhead->next=head;
         ListNode* cur=_dummyhead;
