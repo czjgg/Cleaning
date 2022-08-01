@@ -8,6 +8,47 @@
 using namespace std;
 class Solution {
 public:
+    vector<string> commonChars(vector<string>& words) {
+      int hash[26] = {0};
+      for(int i = 0; i < words[0].size(); i++){
+        hash[words[0][i] - 'a']++;
+      }
+      int hashOther[26]={0};
+      for(int i = 1; i<words.size(); i++){
+        memset(hashOther, 0, 26*sizeof(int));
+        for(int j = 0; j < words[i].size(); j++){
+          hashOther[words[i][j] - 'a']++;
+        }
+        for(int k = 0; k < 26; k++){
+          hash[k] = min(hash[k], hashOther[i]);
+        }
+      }
+      vector<string> result;
+      for(int k = 0; k < 26; k++){
+        while (hash[k] != 0) { // 注意这里是while，多个重复的字符
+        string s(1, k + 'a'); // char -> string
+        result.push_back(s);
+        hash[k]--;
+        }
+      }
+      return result;
+    }
+    bool isIsomorphic(string s, string t) {
+      unordered_map<char, char> map1;
+      unordered_map<char, char> map2;
+      for(int i = 0, j = 0; i < s.size(); i++){
+        if(map1.find(s[i]) != map1.end()){
+          map1[s[i]] = t[j];
+        }
+        if(map2.find(t[j]) != map2.end(); j++){
+          map2[t[j]] = s[i];
+        }
+        if(map1[s[i]] != t[j] || map2[t[j]] != s[i]){
+          return false;
+        }
+      }
+      return true;
+    }
     vector<vector<int>> threeSum(vector<int>& nums) {
         vector<vector<int>> ans;
         sort(nums.begin(),nums.end());

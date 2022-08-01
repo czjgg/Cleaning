@@ -29,6 +29,7 @@ struct TreeNode {
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
+
 void treeInsert(TreeNode* cur,int val,bool left){
   TreeNode* temp=new TreeNode(val);
   if(left){
@@ -50,7 +51,30 @@ private:
     vector<int> resultOfMode;
     int preval;
     int result;
-
+    int vectorToInt(const vector<int>& vec){
+      int sum = 0;
+      for(int i = 0; i < vec.size(); i++){
+        sum = sum * 10 + vec[i];
+      }
+      return sum;
+    }
+    void traversalToSumLeafNode(TreeNode* cur){
+      if(!cur->left && !cur->right){
+        result += vectorToInt(path);
+        return;
+      }
+      if(cur->left){
+        path.push_back(cur->left->val);
+        traversalToSumLeafNode(cur->left);
+        path.pop_back();
+      }
+      if(cur->right){
+        path.push_back(cur->right->val);
+        traversalToSumLeafNode(cur->right);
+        path.pop_back();
+      }
+      return ;
+    }
     int traversal(TreeNode* cur) {
       if(cur == nullptr) return 2;
 
@@ -73,6 +97,13 @@ private:
       cur->val+=preval;
       preval=cur->val;
       traversalToTransGreatSumTree(cur->left);
+    }
+    void traversalToTransTreeToOrderVec(TreeNode* cur){
+      if(cur == nullptr) return;
+      traversalToTransTreeToOrderVec(cur->left);
+      path.push_back(cur->val);
+      traversalToTransGreatSumTree(cur->right);
+      return ;
     }
     TreeNode* traversalToStructBST(vector<int>& nums,int left,int right){
       if(left>right) return nullptr;
@@ -207,6 +238,17 @@ public:
     int maxleftValue;
     vector<int> vec98;   
     TreeNode* parent;
+    TreeNode* balanceBST(TreeNode* root) {
+      traversalToTransTreeToOrderVec(root);
+      return traversalToStructBST(path,0,path.size() - 1);
+    }
+    int sumNumbers(TreeNode* root) {
+      path.clear();
+      if(root == nullptr) return 0;
+      path.push_back(root->val);
+      traversalToSumLeafNode(root);
+      return result;
+    }
     int minCameraCover(TreeNode* root) {
         result = 0;
         // 情况4
