@@ -5,49 +5,60 @@
 #include<unordered_set>
 #include<cstring>
 #include<math.h>
+#include<list>
+#include<stack>
+#include<queue>
 #include<algorithm>
 using namespace std;
 
+stack<int> sq;
+deque<int> q;
+vector<vector<int>> results;
 
-class solution{
-private:
-    vector<int> path; // 用来存放符合条件结果
-    int count = 0;
-    void backtrackingToFindAllSum2(vector<int>& candidates, int targetSum, int startIndex, int sum){
-      if(sum == targetSum&& !path.empty()){
-        count++;
-        return;
-      }
-      for(int i = startIndex; i < candidates.size() && sum + candidates[i] <= targetSum ; i++){
-        sum += candidates[i];
-        path.push_back(candidates[i]);
-        backtrackingToFindAllSum2(candidates,targetSum,i+1,sum);
-        path.pop_back();
-        sum-=candidates[i];
-      }
+void backTracking(int count, int n,stack<int> sq,deque<int> que,bool isright){
+  if(count > n) return;
+  if(count == n){
+    vector<int> path;
+    while(!que.empty()){
+      path.push_back(que.front());
+      que.pop_front();
     }
-
-public:
-  int combinationSum2(vector<int>& candidates, int target) {
-      path.clear();
-      sort(candidates.begin(),candidates.end());
-      backtrackingToFindAllSum2(candidates,target,0,0);
-      return count;
+    while(!sq.empty()){
+      path.push_back(sq.top());
+      sq.pop();
+    }
+    results.push_back(path);
+    return;
   }
-};
+  sq.push(count + 1);
+  backTracking(count + 1, n, sq, que, false);
 
+  sq.pop();
+
+  que.push_front(sq.top());
+  sq.pop();
+  return;
+}
 int main(){
-    
-    int k,n,temp;
-    vector<int> candidates;
-    cin>>n>>k;
-    for(int i = 0; i < n; i++){
-        cin>>temp;
-        candidates.push_back(temp);
-    }
-    sort(candidates.begin(),candidates.end());
-    solution A;
-    int count=A.combinationSum2(candidates,k);
-    cout<<count;
-    getchar();
+        int n =0;
+        cin>>n;
+        backTracking(0,n,sq,q,false);
+        for(auto a: results){
+          for(auto b:a){
+                cout<< b<< ' ';
+        }
+       cout<< endl;
+      }
+      while(cin>>n, !cin.eof()){
+        if(cin.bad()){
+          throw std::runtime_error("cin is corrupted");
+        }
+        if(cin.fail()){
+          cin.clear();
+          cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+          continue;
+        }
+      }
+      getchar();
+      getchar();
 }

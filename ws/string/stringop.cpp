@@ -55,7 +55,7 @@ public:
       return false;
     }
     while(j < typed.size()){
-      if(typed[j] == type[j - 1]) j++;
+      if(typed[j] == typed[j - 1]) j++;
       else return false;
     }
     return true;

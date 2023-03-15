@@ -18,6 +18,7 @@ private:
     vector<vector<string>> resultPalindrome;
     vector<vector<string>> resultQueen;
     string s;
+    int count=0;
 
     
     const string letterMap[10] = {
@@ -76,6 +77,19 @@ private:
     void backtrackingNQueen(int n, int row, vector<string>& chessboard) {
       if(row == n){
         resultQueen.push_back(chessboard);
+        return;
+      }
+      for(int col = 0; col < n; col++){
+        if(isValidChess(row, col, chessboard, n)){
+          chessboard[row][col] = 'Q';
+          backtrackingNQueen(n, row + 1, chessboard);
+          chessboard[row][col] = '.';
+        }
+      }
+    }
+    void backtrackingNQueen2(int n, int row, vector<string>& chessboard) {
+      if(row == n){
+        count++;
         return;
       }
       for(int col = 0; col < n; col++){
@@ -326,6 +340,18 @@ public:
 
     void solveSudoku(vector<vector<char>>& board) {
       backtrackingToShuDu(board);
+    }
+    int totalNQueens(int n) {
+      vector<string> chessBoards;
+      string temp;
+      for(int i = 0; i < n;i++){
+        for(int j = 0; j < n;j++){
+          temp += '.';
+        }
+        chessBoards.push_back(temp);
+      }
+      backtrackingNQueen2(0,0,chessBoards);
+      return count;
     }
     vector<vector<string>> solveNQueens(int n) {
       resultQueen.clear();

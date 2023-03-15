@@ -5,6 +5,31 @@
 using namespace std;
 class Solution {
 public:
+  bool searchMatrix(vector<vector<int>>& matrix, int target) {
+    int m = matrix.size(), n = matrix[0].size();
+    int i = 0, j = n - 1;
+    for(;i < m, j >= 0;){
+      if(matrix[i][j] == target){
+        return true;
+      }else if(matrix[i][j] > target){
+        --j;
+      }else{
+        ++i;
+      }
+    }
+    return false;  
+  }
+  int findRepeatNumber(vector<int>& nums) {
+    const int nSize = nums.size();
+    vector<bool> numsUsed(nSize, false);
+    for(int i = 0; i < nSize; i++){
+      if(numsUsed[nums[i]] == true){
+        return nums[i];
+      }
+      numsUsed[nums[i]] = true;
+    }
+    return -1;
+  }
   int searchInsert(vector<int>& nums, int target) {
     int left = 0, right = nums.size();
     while(left < right){
@@ -196,13 +221,46 @@ public:
   }
 };
 int main(){
-  vector<int> a={1,1,2,3,4};
-  vector<char> b={'a','b','c','d','e','f','g'};
-  string c="asdfasdfasdfasdf";
-  string e="acacdef";
-  Solution A;
-  for(auto f:A.searchRange(a,1)){
-    cout<<f<<endl;
+  // vector<int> a={1,1,2,3,4};
+  // vector<char> b={'a','b','c','d','e','f','g'};
+  // string c="asdfasdfasdfasdf";
+  // string e="acacdef";
+  // Solution A;
+  // for(auto f:A.searchRange(a,1)){
+  //   cout<<f<<endl;
+  // }
+
+  int n,m;
+  cin >> n >> m;
+  if(n > 0 && m > 0){
+    int count = n;
+    int *num = (int*)malloc(n * sizeof(int));
+    for(int index = 0; index < n; index++){
+      num[index] = index + 1;
+    }
+    int i = 0;
+    while(count != 1){
+      int j = m;
+      j %= count;
+      if(j == 0) j += count;
+      while(j > 1 || num[i] == 0){
+        if(num[i] != 0){
+          j--;
+        }
+        i = (i + 1)% n;
+      }
+      num[i] = 0;
+      i = (i + 1) % n;
+      count--;
+    }
+    for(int i = 0; i < n; i++){
+      if( 0 != num[i]){
+        cout << "number:" << num[i];
+        break;
+      }
+    }
+  }else{
+    cout << "param error.";
   }
   getchar();
 }

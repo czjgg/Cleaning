@@ -31,9 +31,34 @@ class Solution{
     //     return a[1] < b[1];
     // }
 private:
+    vector<vector<int>>result;
+    vector<int> path;
+    vector<bool> visited;
+    void init(int n){
+        visited.push_back(false);
+        for(int i = 1; i < n+1; i++){
+            visited.push_back(false);
+        }
+    }
+    void backTracking(int n, int index, vector<bool>& visited){
+        if(index == n){
+            result.push_back(path);
+            return;
+        }
+        for(int i = 1; i <= n; i++){
+            if(visited[i] == false){
+                path.push_back(i);
+                visited[i] = true;
+                backTracking(n, index + 1, visited);
+                visited[i]=false;
+                path.pop_back();
+            }
+        }
+    }
     
 public:
     int dp[1005][2];
+    
     int maxProfit(vector<int>& prices, int fee) {
         int result = 0;
         int minPrice = prices[0];

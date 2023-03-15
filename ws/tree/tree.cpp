@@ -1045,6 +1045,7 @@ public:
 int main(){
   vector<int> ans;
   int res;
+  string s;
   TreeNode* root=new TreeNode(3);
   treeInsert(root,4,true);
   treeInsert(root,5,false);
